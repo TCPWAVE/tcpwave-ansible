@@ -1,0 +1,26 @@
+---
+- name: Tasks to delete an object in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    ip_address: 10.1.10.3
+    organization_name: Internal
+  tasks:
+    - name: Delete an object
+      uri:
+        url: "https://{{ ipam_ip }}:7443/tims/rest/object/delete-multiple"
+        client_cert: "{{ user_cert_file }}"
+        client_key: "{{ user_cert_key_file }}"
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+        'addressArray':['{{ ip_address }}'],
+        'isDeleterrsChecked':1,
+        'organization_name':'{{ organization_name }}'
+        }
+        status_code: 200
+        body_format: json
+        validate_certs: no

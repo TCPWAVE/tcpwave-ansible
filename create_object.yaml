@@ -1,0 +1,48 @@
+---
+- name: Tasks to create an object in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    subnet_address: 10.1.10.0
+    organization_name: Internal
+    host_name: AnsibleIPAM
+    object_type: "TCPWave IPAM"
+    domain_name: dunkin.com
+    addr1: 10
+    addr2: 1
+    addr3: 10
+    addr4: 3
+
+  tasks:
+    - name: Create an object
+      uri:
+        url: "https://{{ ipam_ip }}:7443/tims/rest/object/add"
+        client_cert: "{{ user_cert_file }}"
+        client_key: "{{ user_cert_key_file }}"
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+        'name': '{{ host_name }}',
+        'class_code': '{{ object_type }}',
+        'alloc_type': '1',
+        'ttl': '1200',
+        'addr1': '{{ addr1 }}',
+        'addr2': '{{ addr2 }}',
+        'addr3': '{{ addr3 }}',
+        'addr4': '{{ addr4 }}',
+        'subnet_address': '{{ subnet_address }}',
+        'domain_name': '{{ domain_name }}',
+        'update_ns_a': true,
+        'update_ns_ptr': true,
+        'dyn_update_rrs_a': true,
+        'dyn_update_rrs_ptr': true,
+        'dyn_update_rrs_cname': true,
+        'dyn_update_rrs_mx': true,
+        'organization_name': '{{ organization_name }}'
+                }
+        status_code: 200
+        body_format: json
+        validate_certs: no
