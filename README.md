@@ -1,5 +1,28 @@
-# tcpwave-ansible
-Ansible Playbooks to interact with TCPWave IPAM.
+# TCPWave-Ansible Integration
+You can automate TCPWave IP Address Management System (TIMS) using Ansible playbooks using the
+secure and powerful REST APIsthat are used by TIMS GUI and CLI interfaces, and for integration into cloud
+orchestration layers. The TIMS REST APIs are designed to be secure and allow only encrypted access to
+the system without the need for any plain text user ID or password.
+TIMS supports two mechanisms for handling REST API Authentication
+
+## Session Token Based Authentication:
+A long-lived session token is generated in TIMS. This session
+token is associated with a given admin user and inherits all the permissions of that user. The
+session token is also associated with a source IP and can be used only from that IP. The life of the
+session token is set as per the global policy “Maximum Concurrent Sessions per Admin”. The
+session token can be revoked or extended at any time. This token is set on the request header as
+the TIMS-Session-Token parameter. All the API calls with this token are subjected to the same
+permission checks as the associated user and are audited against that user.
+
+## Certificate-Based Authentication:
+In this protocol, access to TIMS is provided using a certificate
+signed by a trusted authority. The certificate-based mechanism provides a stateless interface that
+can be leveraged by automation clients that interact with more than one system. User certificates
+can be imported to TIMS and associated with a particular admin. All the service calls made using
+that certificate are authorized and audited against the associated admin
+
+
+
 # Playbook Commands
   $ ansible-playbook create_object.yaml
   
