@@ -5,6 +5,38 @@ Ansible Playbooks to interact with TCPWave IPAM.
   
   $ ansible-playbook delete_object.yaml
   
+  $ ansible-playbook create_object_rr_atype.yaml
+  
+  $ ansible-playbook create_object_rr_cname.yaml
+  
+  $ ansible-playbook create_object_rr_mx.yaml
+  
+  $ ansible-playbook create_object_rr_txt.yaml
+  
+  $ ansible-playbook create_object_rr_srv.yaml
+  
+  $ ansible-playbook create_object_rr_naptr.yaml
+  
+  $ ansible-playbook create_zone.yaml
+  
+  $ ansible-playbook create_zone_rr_Atype.yaml
+  
+  $ ansible-playbook create_zone_rr_cname.yaml
+  
+  $ ansible-playbook create_zone_rr_mx.yaml
+  
+  $ ansible-playbook create_zone_rr_txt.yaml
+  
+  $ ansible-playbook create_zone_rr_aaaa.yaml
+  
+  $ ansible-playbook create_zone_rr_srv.yaml
+  
+  $ ansible-playbook create_zone_rr_naptr.yaml
+  
+  $ ansible-playbook create_next_available_subnet.yaml
+  
+  $ ansible-playbook create_dhcp_scopes.yaml
+  
   $ ansible-playbook object_workflow.yaml --extra-vars "host_name=ansible-obj object_type=Laptop“
   
   $ ansible-playbook delete_object.yaml --extra-vars "ip_address=10.1.10.11"
