@@ -1,0 +1,27 @@
+---
+- name: Task to fetch next free IP address in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    subnet_address: 10.1.10.0
+    organization_name: Internal
+  tasks:
+    - name: Get next free IP address
+      uri:
+        url: "https://{{ ipam_ip }}:7443/tims/rest/object/nextfreeip?subnet_address={{ subnet_address }}&organization_name={{ organization_name }}"
+        client_cert: "{{ user_cert_file }}"
+        client_key: "{{ user_cert_key_file }}"
+        method: GET
+        headers:
+          Accept: application/json
+        status_code: 200
+        validate_certs: no
+        return_content: yes
+      register: data
+
+    - set_fact :
+        var2: "{{ data.json[0].startIp.split('.') }}"
+    - debug:
+        msg: " Next free IP address is {{ var2.0 }}.{{ var2.1 }}.{{ var2.2 }}.{{ var2.3 }}"
