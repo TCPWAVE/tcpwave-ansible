@@ -1,0 +1,37 @@
+---
+- name: Tasks to create a zone RR CNAME in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    organization_name: Dunkin
+    zone_name: test.in
+    owner_name: CRecord.Ansible.in.
+    data: ARecord.Ansible.in.
+
+  tasks:
+    - name: Create a Zone RR CNAME
+      uri:
+        url: 'https://{{ ipam_ip }}:7443/tims/rest/zone/rr/add'
+        client_cert: '{{ user_cert_file }}'
+        client_key: '{{ user_cert_key_file }}'
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+                
+                        'zoneName': '{{ zone_name }}',
+                        'owner': '{{owner_name}}',
+                        'rrclass': 'IN',
+                        'rrtype': 'CNAME',
+                        'ttl': '1200',
+                        'data': '{{data}}',
+                        'description': '',
+                        'is_external_rr': 0,
+                        'status': 1,
+                        'organization_name': '{{ organization_name }}'
+              }
+        status_code: 204
+        body_format: json
+        validate_certs: no

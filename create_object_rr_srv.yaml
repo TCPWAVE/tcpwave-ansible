@@ -1,0 +1,34 @@
+---
+- name: Tasks to create a object RR SRV type in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    organization_name: Dunkin
+    owner: _1._tcp.ObjectA
+    data: 1 100 7443 ObjectA
+    ip: 1.0.0.9
+
+  tasks:
+    - name: Create a Object RR SRV type
+      uri:
+        url: 'https://{{ ipam_ip }}:7443/tims/rest/object/rr/add'
+        client_cert: '{{ user_cert_file }}'
+        client_key: '{{ user_cert_key_file }}'
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+                        'owner': '{{ owner }}',
+                        'rrclass': 'IN',
+                        'rrtype': 'SRV',
+                        'ttl': 1200,
+                        'data': '{{ data }}',
+                        'ipAddr': '{{ ip }}',
+                        'is_ad_rr': 0,
+                        'organization_name': '{{ organization_name }}'
+        }
+        status_code: 200
+        body_format: json
+        validate_certs: no

@@ -1,0 +1,44 @@
+---
+- name: Tasks to create a DHCP Scopes in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    organization_name: Dunkin
+    server_name: CS-DHCP-Primary
+    template: DHCP-Std-Option-Template
+    ip: 1.0.0.0
+    start_ip : 1.0.0.80
+    end_ip : 1.0.0.90
+
+  tasks:
+    - name: Create a DHCP Scopes 
+      uri:
+        url: 'https://{{ ipam_ip }}:7443/tims/rest/scope/create'
+        client_cert: '{{ user_cert_file }}'
+        client_key: '{{ user_cert_key_file }}'
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+                                        'ttl': '1200',
+                                        'scope': {
+                                                'class_code': '3G Phone',
+                                                'description': '',
+                                                'organization_name': '{{ organization_name }}',
+                                                'primary_dhcp_server': '{{ server_name }}',
+                                                'allocation_type': 'dynamic',
+                                                'template_name': '{{ template }}',
+                                                'addressRanges': [
+                                                        {
+                                                                'startIP': '{{ start_ip }}',
+                                                                'endIP': '{{ end_ip }}'
+                                                        }
+                                                ]
+                                        },
+                                        'subnetAddress': '{{ ip }}'
+             }
+        status_code: 200
+        body_format: json
+        validate_certs: no

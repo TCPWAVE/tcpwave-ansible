@@ -1,0 +1,31 @@
+---
+- name: Tasks to create a next available subnet in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    organization_name: Dunkin
+    sname: Ansible next Subnet
+    subnet_template: subnet-template
+    ip: 10.10.0.0/16
+
+  tasks:
+    - name: Create a next available subnet 
+      uri:
+        url: 'https://{{ ipam_ip }}:7443/tims/rest/subnet/createNextAvailableSubnet'
+        client_cert: '{{ user_cert_file }}'
+        client_key: '{{ user_cert_key_file }}'
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+                                'mask_length':24,
+                                'name':'{{ sname }}',
+                                'subnetTemplateName':'{{ subnet_template }}',
+                                'network_address':'{{ ip }}',
+                                'organization_name':'{{ organization_name }}'
+              }
+        status_code: 200
+        body_format: json
+        validate_certs: no

@@ -1,0 +1,40 @@
+---
+- name: Tasks to create a zone in TCPWave IPAM
+  hosts: localhost
+  vars:
+    user_cert_file: /opt/ansible/keys/ansible.crt
+    user_cert_key_file: /opt/ansible/keys/ansible.key
+    ipam_ip: 10.1.10.120
+    organization_name: Dunkin
+    zone_name: test.in
+    template_name: 'ansible'
+
+  tasks:
+    - name: Create a zone
+      uri:
+        url: 'https://{{ ipam_ip }}:7443/tims/rest/zone/add'
+        client_cert: '{{ user_cert_file }}'
+        client_key: '{{ user_cert_key_file }}'
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: {
+               
+                        'name': '{{ zone_name }}',
+                        'template_name': '{{ template_name }}',
+                        'importCloudRR': true,
+                        'description': '',
+                        'dnssec_enable': 'no',
+                        'restrictedZone': 'no',
+                        'monitoringService': 'yes',
+                        'extensions': [],
+                        'secureActiveDirectoryEnable': 'no',
+                        'addedARRs': [],
+                        'deletedARRs': [],
+                        'zoneRR': [],
+                        'organization_name': '{{ organization_name }}'
+                }
+        status_code: 204
+        body_format: json
+        validate_certs: no
+
